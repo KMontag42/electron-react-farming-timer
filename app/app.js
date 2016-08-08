@@ -65,19 +65,19 @@ class App extends React.Component {
 
     content.addEventListener('play', () => {
       if (this.state.currentView == 'home') {
-        this.setupInterval();
+        this.onStartClick();
       }
     });
 
     content.addEventListener('stop', () => {
       if (this.state.currentView == 'home') {
-        this.restartTimer(true);
+        this.onStopClick(true);
       }
     });
 
     content.addEventListener('pause', () => {
       if (this.state.currentView == 'home') {
-        this.restartTimer();
+        this.onPauseClick();
       }
     });
   }
@@ -112,15 +112,14 @@ class App extends React.Component {
   }
 
   homeView() {
-    let averageTime = '~';
-    let toComplete = '~';
+    let averageTime = moment.duration(0);
+    let toComplete = moment.duration(0);
     let currentMoment = moment.duration(this.state.currentTime * 1000);
 
     if (this.state.previousTimes.length > 0) {
-      averageTime = (this.state.previousTimes.reduce((a,b) => a+b) / this.state.previousTimes.length).toFixed(3);
-      toComplete = ((this.state.targetCount - this.state.currentCount) * averageTime).toFixed(3);
+      averageTime = moment.duration((this.state.previousTimes.reduce((a,b) => a+b) / this.state.previousTimes.length) * 1000);
+      toComplete = moment.duration(((this.state.targetCount - this.state.currentCount) * averageTime) * 1000);
     }
-
 
     return (
       <div>
@@ -161,7 +160,7 @@ class App extends React.Component {
           verticalAlignment="center"
           className="inline-flex"
         >
-          Avg: {averageTime}
+          Avg: {padNumber(averageTime.hours())}:{padNumber(averageTime.minutes())}:{padNumber(averageTime.seconds())}
         </Text>
         <span className="inline-flex" style={{width: "10%"}}>
           <a href="#" onClick={this.timerInterval == null ? this.onStartClick : this.onPauseClick}>
@@ -175,7 +174,7 @@ class App extends React.Component {
           verticalAlignment="center"
           className="inline-flex"
         >
-          To Complete: {toComplete}
+          To Complete: {padNumber(toComplete.hours())}:{padNumber(toComplete.minutes())}:{padNumber(toComplete.seconds())}
         </Text>
         <span className="inline-flex" style={{width: "10%"}}>
           <a href="#" onClick={this.onStopClick}>

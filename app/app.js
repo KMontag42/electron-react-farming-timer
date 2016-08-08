@@ -33,6 +33,7 @@ class App extends React.Component {
     document.getElementById('content').addEventListener('nextLap', () => {
       let newState = this.state;
       newState.currentCount += 1;
+      newState.previousTimes.push(this.state.currentTime);
       newState.currentTime = 0;
       this.setState(newState);
     });
@@ -41,6 +42,13 @@ class App extends React.Component {
   // render method is most important
   // render method returns JSX template
   render() {
+    let averageTime = '~';
+    let toComplete = '~';
+
+    if (this.state.previousTimes.length > 0) {
+      averageTime = (this.state.previousTimes.reduce((a,b) => a+b) / this.state.previousTimes.length).toFixed(3);
+      toComplete = ((this.state.targetCount - this.state.currentCount) * averageTime).toFixed(3);
+    }
     return (
       <div>
         <Text
@@ -67,7 +75,7 @@ class App extends React.Component {
           horizontalAlignment="left"
           verticalAlignment="center"
         >
-          Avg: 00:00:00
+          Avg: {averageTime}
         </Text>
         <Text
           theme={this.props.theme}
@@ -75,7 +83,7 @@ class App extends React.Component {
           horizontalAlignment="left"
           verticalAlignment="center"
         >
-          To Complete: 00:00:00
+          To Complete: {toComplete}
         </Text>
       </div>
   );

@@ -13,10 +13,19 @@
 
   <script>
     // You can also require other files to run in this process
-    require('./renderer.js')
+    require('./renderer.js');
     const { ipcRenderer } = require('electron');
-    ipcRenderer.on('global-shortcut', function(event, message) {
+    ipcRenderer.on('next-lap', function(event, message) {
       document.getElementById('content').dispatchEvent(new Event('nextLap'));
+    });
+    ipcRenderer.on('play', function(event, message) {
+      document.getElementById('content').dispatchEvent(new Event('play'));
+    });
+    ipcRenderer.on('stop', function(event, message) {
+      document.getElementById('content').dispatchEvent(new Event('stop'));
+    });
+    ipcRenderer.on('pause', function(event, message) {
+      document.getElementById('content').dispatchEvent(new Event('pause'));
     });
   </script>
 

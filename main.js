@@ -5,8 +5,6 @@ const app = electron.app;
 const globalShortcut = electron.globalShortcut;
 // Module to create native browser window.
 const BrowserWindow = electron.BrowserWindow;
-// IPC Module
-const ipc = electron.ipcMain;
 
 require('electron-reload')(__dirname);
 
@@ -21,13 +19,18 @@ function createWindow () {
   // and load the index.html of the app.
   mainWindow.loadURL(`file://${__dirname}/index.html`);
 
-  const ret = globalShortcut.register('Control+X', () => {
-    mainWindow.webContents.send('global-shortcut', 1);
+  globalShortcut.register('Control+X', () => {
+    mainWindow.webContents.send('next-lap', 1);
   });
-
-  if (!ret) {
-    console.log('registration failed')
-  }
+  globalShortcut.register('Control+P', () => {
+    mainWindow.webContents.send('play', 1);
+  });
+  globalShortcut.register('Control+S', () => {
+    mainWindow.webContents.send('stop', 1);
+  });
+  globalShortcut.register('Control+U', () => {
+    mainWindow.webContents.send('pause', 1);
+  });
 
   // Emitted when the window is closed.
   mainWindow.on('closed', function () {
@@ -64,7 +67,3 @@ app.on('activate', function () {
 
 // In this file you can include the rest of your app's specific main process
 // code. You can also put them in separate files and require them here.
-
-ipc.on('global-shortcut', (event, arg) => {
-  console.log('hi kyle');
-});

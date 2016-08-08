@@ -4,6 +4,7 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import { Text, Label, Button } from 'react-desktop/windows';
 import _ from 'underscore';
+import moment from 'moment';
 
 // Search component created as a class
 class App extends React.Component {
@@ -25,27 +26,34 @@ class App extends React.Component {
     this.onStartClick = this.onStartClick.bind(this);
     this.onStopClick = this.onStopClick.bind(this);
     this.onPauseClick = this.onPauseClick.bind(this);
+    this.onSettingsClick = this.onSettingsClick.bind(this);
     this.setupInterval = this.setupInterval.bind(this);
     this.restartTimer = this.restartTimer.bind(this);
     this.onTotalInputChange = this.onTotalInputChange.bind(this);
   }
 
   setupInterval() {
-    this.timerInterval = setInterval(() => {
-      let newState = this.state;
-      newState.currentTime += 1;
-      this.setState(newState);
-    }, 1000);
+    if (this.timerInterval == null) {
+      this.timerInterval = setInterval(() => {
+        let newState = this.state;
+        newState.currentTime += 1;
+        this.setState(newState);
+      }, 1000);
+    }
   }
 
-  restartTimer() {
+  restartTimer(alterState = false) {
     clearInterval(this.timerInterval);
     this.timerInterval = null;
-    this.setState({currentCount: 0, currentTime: 0});
+    if (alterState) {
+      this.setState({currentCount: 0, currentTime: 0});
+    }
   }
 
   componentDidMount() {
-    document.getElementById('content').addEventListener('nextLap', () => {
+    let content = document.getElementById('content');
+
+    content.addEventListener('nextLap', () => {
       if (this.state.currentView == 'home') {
         let newState = this.state;
         newState.currentCount += 1;
@@ -54,13 +62,29 @@ class App extends React.Component {
         this.setState(newState);
       }
     });
+
+    content.addEventListener('play', () => {
+      if (this.state.currentView == 'home') {
+        this.setupInterval();
+      }
+    });
+
+    content.addEventListener('stop', () => {
+      if (this.state.currentView == 'home') {
+        this.restartTimer(true);
+      }
+    });
+
+    content.addEventListener('pause', () => {
+      if (this.state.currentView == 'home') {
+        this.restartTimer();
+      }
+    });
   }
 
   componentDidUpdate() {
-    if (this.state.currentView == 'home') {
-
-    } else {
-      this.restartTimer();
+    if (this.state.currentView != 'home') {
+      this.restartTimer(true);
     }
   }
 
@@ -75,24 +99,28 @@ class App extends React.Component {
   }
 
   onStopClick() {
-    this.restartTimer();
+    this.restartTimer(true);
   }
 
   onPauseClick() {
-    // this is different than stop because it doesn't change our state,
-    // simply stops the interval from going
-    clearInterval(this.timerInterval);
-    this.timerInterval = null;
+    this.restartTimer();
+    this.forceUpdate();
+  }
+
+  onSettingsClick() {
+
   }
 
   homeView() {
     let averageTime = '~';
     let toComplete = '~';
+    let currentMoment = moment.duration(this.state.currentTime * 1000);
 
     if (this.state.previousTimes.length > 0) {
       averageTime = (this.state.previousTimes.reduce((a,b) => a+b) / this.state.previousTimes.length).toFixed(3);
       toComplete = ((this.state.targetCount - this.state.currentCount) * averageTime).toFixed(3);
     }
+
 
     return (
       <div>
@@ -103,7 +131,7 @@ class App extends React.Component {
           verticalAlignment="center"
           className="inline-flex"
         >
-          Current: {this.state.currentTime}
+          Current: {padNumber(currentMoment.hours())}:{padNumber(currentMoment.minutes())}:{padNumber(currentMoment.seconds())}
         </Text>
         <span className="inline-flex" style={{width: "10%"}}>
           <a href="#" onClick={this.onSetupClick}>
@@ -122,8 +150,8 @@ class App extends React.Component {
           {this.state.targetCount}
         </Text>
         <span className="inline-flex" style={{width: "10%"}}>
-          <a href="#" onClick={this.onStartClick}>
-            <i className="fa fa-play"/>
+          <a href="#" onClick={this.onSettingsClick}>
+            <i className="fa fa-gear"/>
           </a>
         </span>
         <Text
@@ -136,8 +164,8 @@ class App extends React.Component {
           Avg: {averageTime}
         </Text>
         <span className="inline-flex" style={{width: "10%"}}>
-          <a href="#" onClick={this.onPauseClick}>
-            <i className="fa fa-pause"/>
+          <a href="#" onClick={this.timerInterval == null ? this.onStartClick : this.onPauseClick}>
+            <i className={'fa ' + (this.timerInterval == null ? 'fa-play' : 'fa-pause')}/>
           </a>
         </span>
         <Text
@@ -198,3 +226,10 @@ class App extends React.Component {
 ReactDOM.render( <App/> ,
   document.getElementById('content')
 );
+
+function padNumber(num) {
+  if (num < 10) {
+    return "0" + num;
+  }
+  return num;
+}

@@ -20,7 +20,8 @@
     "react": "latest",
     "react-dom": "latest",
     "react-desktop": "latest",
-    "underscore": "latest"
+    "underscore": "latest",
+    "moment": "latest"
   },
   "babel": {
     "presets": ["es2015", "stage-0", "react"]

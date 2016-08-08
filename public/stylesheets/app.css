@@ -1,8 +1,41 @@
 html, body {
     width: 100%;
     -webkit-app-region: drag;
+    margin: 0;
 }
 
-button {
+#content {
+    padding: 5px;
+}
+
+button, input {
     -webkit-app-region: nodrag;
+}
+
+.inline-flex {
+    display: inline-flex !important;
+}
+
+input {
+    margin-bottom: 0.5em;
+    font-size: 16px;
+    padding: 0.5em;
+}
+
+input[type='submit'] {
+    border-radius: 0;
+    padding: 0.5em;
+    border: none;
+    background: darkblue;
+    color: white;
+}
+
+button.cancel {
+    border-radius: 0;
+    padding: 0.5em;
+    border: none;
+    background: darkgrey;
+    color: white;
+    font-size: 16px;
+    margin-left: 1em;
 }

@@ -17,10 +17,10 @@
     "babelify": "latest",
     "electron-prebuilt": "latest",
     "electron-reload": "latest",
-    "jquery": "latest",
     "react": "latest",
     "react-dom": "latest",
-    "react-desktop": "latest"
+    "react-desktop": "latest",
+    "underscore": "latest"
   },
   "babel": {
     "presets": ["es2015", "stage-0", "react"]

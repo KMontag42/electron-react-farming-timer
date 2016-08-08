@@ -1,14 +1,14 @@
 {
-  "name": "scotch-player",
-  "productName":"Scotch Player",
+  "name": "farming-timer",
+  "productName":"Farming Timer",
   "version": "1.0.0",
-  "description": "Scotch Demo Player",
+  "description": "Farming Timer for different MMO Games and other tasks.",
   "main": "main.js",
   "scripts": {
     "start": "electron main.js",
     "watch": "watchify app/app.js -t babelify -o public/js/bundle.js --debug --verbose"
   },
-  "author": "Scotch",
+  "author": "Kyle Montag",
   "license": "MIT",
   "dependencies": {
     "babel-preset-es2015": "latest",

@@ -24,9 +24,6 @@
     ipcRenderer.on('stop', function(event, message) {
       document.getElementById('content').dispatchEvent(new Event('stop'));
     });
-    ipcRenderer.on('pause', function(event, message) {
-      document.getElementById('content').dispatchEvent(new Event('pause'));
-    });
   </script>
 
   <script src="public/js/bundle.js"></script>

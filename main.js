@@ -19,7 +19,7 @@ function createWindow () {
   // and load the index.html of the app.
   mainWindow.loadURL(`file://${__dirname}/index.html`);
 
-  globalShortcut.register('Control+X', () => {
+  globalShortcut.register('Control+L', () => {
     mainWindow.webContents.send('next-lap', 1);
   });
   globalShortcut.register('Control+P', () => {
@@ -27,9 +27,6 @@ function createWindow () {
   });
   globalShortcut.register('Control+S', () => {
     mainWindow.webContents.send('stop', 1);
-  });
-  globalShortcut.register('Control+U', () => {
-    mainWindow.webContents.send('pause', 1);
   });
 
   // Emitted when the window is closed.

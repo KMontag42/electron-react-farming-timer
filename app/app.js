@@ -42,7 +42,7 @@ class App extends React.Component {
     }
   }
 
-  restartTimer(alterState = false) {
+  restartTimer() {
     clearInterval(this.timerInterval);
     this.timerInterval = null;
   }
@@ -62,7 +62,11 @@ class App extends React.Component {
 
     content.addEventListener('play', () => {
       if (this.state.currentView == 'home') {
-        this.onStartClick();
+        if (this.timerInterval) {
+          this.onPauseClick();
+        } else {
+          this.onStartClick();
+        }
       }
     });
 
@@ -71,17 +75,11 @@ class App extends React.Component {
         this.onStopClick(true);
       }
     });
-
-    content.addEventListener('pause', () => {
-      if (this.state.currentView == 'home') {
-        this.onPauseClick();
-      }
-    });
   }
 
   componentDidUpdate() {
     if (this.state.currentView != 'home') {
-      this.restartTimer(true);
+      this.restartTimer();
     }
   }
 
@@ -91,10 +89,12 @@ class App extends React.Component {
 
   onStartClick() {
     this.setupInterval();
+    this.forceUpdate();
   }
 
   onStopClick() {
-    this.restartTimer(true);
+    this.restartTimer();
+    this.setState({currentTime: 0, currentCount: 0, previousTimes: []})
   }
 
   onPauseClick() {
@@ -204,7 +204,7 @@ class App extends React.Component {
           verticalAlignment="center"
           className="inline-flex"
         >
-          <kbd>Control</kbd> + <kbd>P</kbd> : Play
+          <kbd>Control</kbd> + <kbd>L</kbd> : Next
         </Text>
         <span style={{width: '10%'}}>
           <a href="#close" onClick={() => {this.setState({currentView: 'home'});}}>
@@ -213,27 +213,19 @@ class App extends React.Component {
         </span>
         <Text
           theme={this.props.theme}
-          width="10%"
+          width="100%"
           horizontalAlignment="left"
           verticalAlignment="center"
         >
-          <kbd>Control</kbd> + <kbd>U</kbd> : Pause
+          <kbd>Control</kbd> + <kbd>P</kbd> : Play / Pause
         </Text>
         <Text
           theme={this.props.theme}
-          width="10%"
+          width="100%"
           horizontalAlignment="left"
           verticalAlignment="center"
         >
           <kbd>Control</kbd> + <kbd>S</kbd> : Stop
-        </Text>
-        <Text
-          theme={this.props.theme}
-          width="10%"
-          horizontalAlignment="left"
-          verticalAlignment="center"
-        >
-          <kbd>Control</kbd> + <kbd>L</kbd> : Progress
         </Text>
       </div>
     );

@@ -45,9 +45,6 @@ class App extends React.Component {
   restartTimer(alterState = false) {
     clearInterval(this.timerInterval);
     this.timerInterval = null;
-    if (alterState) {
-      this.setState({currentCount: 0, currentTime: 0});
-    }
   }
 
   componentDidMount() {
@@ -89,9 +86,7 @@ class App extends React.Component {
   }
 
   onSetupClick() {
-    let newState = this.state;
-    newState.currentView = 'setup';
-    this.setState(newState);
+    this.setState({currentView: 'setup'});
   }
 
   onStartClick() {
@@ -108,7 +103,8 @@ class App extends React.Component {
   }
 
   onSettingsClick() {
-
+    console.log('was clicked');
+    this.setState({currentView: 'settings'});
   }
 
   homeView() {
@@ -133,7 +129,7 @@ class App extends React.Component {
           Current: {padNumber(currentMoment.hours())}:{padNumber(currentMoment.minutes())}:{padNumber(currentMoment.seconds())}
         </Text>
         <span className="inline-flex" style={{width: "10%"}}>
-          <a href="#" onClick={this.onSetupClick}>
+          <a href="#setup" onClick={() => { this.setState({currentView: 'setup'});}}>
             <i className="fa fa-edit"/>
           </a>
         </span>
@@ -149,7 +145,7 @@ class App extends React.Component {
           {this.state.targetCount}
         </Text>
         <span className="inline-flex" style={{width: "10%"}}>
-          <a href="#" onClick={this.onSettingsClick}>
+          <a href="#settings" onClick={this.onSettingsClick}>
             <i className="fa fa-gear"/>
           </a>
         </span>
@@ -163,7 +159,7 @@ class App extends React.Component {
           Avg: {padNumber(averageTime.hours())}:{padNumber(averageTime.minutes())}:{padNumber(averageTime.seconds())}
         </Text>
         <span className="inline-flex" style={{width: "10%"}}>
-          <a href="#" onClick={this.timerInterval == null ? this.onStartClick : this.onPauseClick}>
+          <a href="#play" onClick={this.timerInterval == null ? this.onStartClick : this.onPauseClick}>
             <i className={'fa ' + (this.timerInterval == null ? 'fa-play' : 'fa-pause')}/>
           </a>
         </span>
@@ -177,7 +173,7 @@ class App extends React.Component {
           To Complete: {padNumber(toComplete.hours())}:{padNumber(toComplete.minutes())}:{padNumber(toComplete.seconds())}
         </Text>
         <span className="inline-flex" style={{width: "10%"}}>
-          <a href="#" onClick={this.onStopClick}>
+          <a href="#stop" onClick={this.onStopClick}>
             <i className="fa fa-stop"/>
           </a>
         </span>
@@ -192,10 +188,55 @@ class App extends React.Component {
           <Label>Target</Label>
           <input type="text" ref="targetInput" placeholder="100" name="target" required/>
           <input type="submit" value="Save"/>
-          <button onClick={() => {this.setState({currentView: 'home'})}} className="cancel">Cancel</button>
+          <button onClick={() => {this.setState({currentView: 'home'});}} className="cancel">Cancel</button>
         </form>
       </div>
     )
+  }
+
+  settingsView() {
+    return (
+      <div>
+        <Text
+          theme={this.props.theme}
+          width="90%"
+          horizontalAlignment="left"
+          verticalAlignment="center"
+          className="inline-flex"
+        >
+          <kbd>Control</kbd> + <kbd>P</kbd> : Play
+        </Text>
+        <span style={{width: '10%'}}>
+          <a href="#close" onClick={() => {this.setState({currentView: 'home'});}}>
+            <i className="fa fa-close"></i>
+          </a>
+        </span>
+        <Text
+          theme={this.props.theme}
+          width="10%"
+          horizontalAlignment="left"
+          verticalAlignment="center"
+        >
+          <kbd>Control</kbd> + <kbd>U</kbd> : Pause
+        </Text>
+        <Text
+          theme={this.props.theme}
+          width="10%"
+          horizontalAlignment="left"
+          verticalAlignment="center"
+        >
+          <kbd>Control</kbd> + <kbd>S</kbd> : Stop
+        </Text>
+        <Text
+          theme={this.props.theme}
+          width="10%"
+          horizontalAlignment="left"
+          verticalAlignment="center"
+        >
+          <kbd>Control</kbd> + <kbd>L</kbd> : Progress
+        </Text>
+      </div>
+    );
   }
 
   onTotalInputChange(e) {
@@ -203,7 +244,6 @@ class App extends React.Component {
     let newState = this.state;
     console.log(this.refs.targetInput.value);
     newState.targetCount = this.refs.targetInput.value;
-    newState.currentCount = 0;
     newState.previousTimes = [];
     newState.currentTime = 0;
     newState.currentView = 'home';
@@ -213,10 +253,12 @@ class App extends React.Component {
   // render method is most important
   // render method returns JSX template
   render() {
-    if (this.state.currentView == 'home') {
+    if (this.state.currentView === 'home') {
       return this.homeView();
-    } else {
+    } else if (this.state.currentView === 'setup') {
       return this.setupView();
+    } else {
+      return this.settingsView();
     }
   }
 }

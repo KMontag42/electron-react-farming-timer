@@ -35,9 +35,7 @@ class App extends React.Component {
   setupInterval() {
     if (this.timerInterval == null) {
       this.timerInterval = setInterval(() => {
-        let newState = this.state;
-        newState.currentTime += 1;
-        this.setState(newState);
+        this.setState({currentTime: this.state.currentTime + 1});
       }, 1000);
     }
   }
@@ -52,11 +50,15 @@ class App extends React.Component {
 
     content.addEventListener('nextLap', () => {
       if (this.state.currentView == 'home') {
-        let newState = this.state;
-        newState.currentCount += 1;
-        newState.previousTimes.push(this.state.currentTime);
-        newState.currentTime = 0;
-        this.setState(newState);
+        if (this.state.currentCount + 1 < this.state.targetCount) {
+          this.setState({
+            currentCount: this.state.currentCount + 1,
+            previousTimes: this.state.previousTimes.push(this.state.currentTime),
+            currentTime: 0
+          });
+        } else {
+          this.onStopClick();
+        }
       }
     });
 
@@ -114,7 +116,7 @@ class App extends React.Component {
 
     if (this.state.previousTimes.length > 0) {
       averageTime = moment.duration((this.state.previousTimes.reduce((a,b) => a+b) / this.state.previousTimes.length) * 1000);
-      toComplete = moment.duration(((this.state.targetCount - this.state.currentCount) * averageTime) * 1000);
+      toComplete = moment.duration(((this.state.targetCount - this.state.currentCount) * averageTime));
     }
 
     return (

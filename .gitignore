@@ -2,3 +2,5 @@ node_modules/
 .idea/
 .DC_Store
 
+dist
+public/js

@@ -1,11 +1,10 @@
 const electron = require('electron');
 // Module to control application life.
 const app = electron.app;
-// Module to trigger global shortcuts
-const globalShortcut = electron.globalShortcut;
 // Module to create native browser window.
 const BrowserWindow = electron.BrowserWindow;
 
+// Enable reloading of the electron instance
 require('electron-reload')(__dirname);
 
 // Keep a global reference of the window object, if you don't, the window will
@@ -14,25 +13,13 @@ let mainWindow;
 
 function createWindow () {
   // Create the browser window.
-  mainWindow = new BrowserWindow({width: 210, height: 115, frame: false, alwaysOnTop: true, resizable: false});
+  mainWindow = new BrowserWindow({width: 800, height: 600});
 
   // and load the index.html of the app.
   mainWindow.loadURL(`file://${__dirname}/index.html`);
 
-  globalShortcut.register('Control+L', () => {
-    mainWindow.webContents.send('next-lap', 1);
-  });
-  globalShortcut.register('Control+P', () => {
-    mainWindow.webContents.send('play', 1);
-  });
-  globalShortcut.register('Control+S', () => {
-    mainWindow.webContents.send('stop', 1);
-  });
-
   // Emitted when the window is closed.
   mainWindow.on('closed', function () {
-    globalShortcut.unregisterAll();
-
     // Dereference the window object, usually you would store windows
     // in an array if your app supports multi windows, this is the time
     // when you should delete the corresponding element.

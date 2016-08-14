@@ -1,4 +1,6 @@
-# electron-quick-start
+# Hotreactron
+
+This is a boilerplate starter kit based on the Electron Quick Start repo
 
 **Clone and run for a quick way to see an Electron in action.**
 
@@ -24,9 +26,12 @@ git clone https://github.com/electron/electron-quick-start
 # Go into the repository
 cd electron-quick-start
 # Install dependencies and run the app
-npm install && npm start
+npm install
+# Run watch script and app
+npm run watch && npm start
 ```
 
 Learn more about Electron and its API in the [documentation](http://electron.atom.io/docs/latest).
+
 
 #### License [CC0 (Public Domain)](LICENSE.md)

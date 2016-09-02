@@ -25,7 +25,6 @@
     "react": "latest",
     "react-dom": "latest",
     "react-desktop": "latest",
-    "underscore": "latest",
     "moment": "latest",
     "typescript": "latest"
   },

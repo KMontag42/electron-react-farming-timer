@@ -3,7 +3,6 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import { Text, Label, Button } from 'react-desktop/windows';
-import _ from 'underscore';
 import moment from 'moment';
 
 // Search component created as a class
@@ -236,7 +235,6 @@ class App extends React.Component {
   onTotalInputChange(e) {
     e.preventDefault();
     let newState = this.state;
-    console.log(this.refs.targetInput.value);
     newState.targetCount = this.refs.targetInput.value;
     newState.previousTimes = [];
     newState.currentTime = 0;
